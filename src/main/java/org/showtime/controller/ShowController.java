@@ -1,8 +1,8 @@
 package org.showtime.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.showtime.domain.Show;
 import org.showtime.service.ShowService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,14 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/shows")
+@RequiredArgsConstructor
 public class ShowController {
 
     private final ShowService showService;
-
-    @Autowired
-    public ShowController(ShowService showService) {
-        this.showService = showService;
-    }
 
     @PostMapping
     public Show createShow(@RequestBody Show show) {

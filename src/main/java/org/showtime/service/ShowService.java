@@ -1,22 +1,18 @@
 package org.showtime.service;
 
+import lombok.RequiredArgsConstructor;
 import org.showtime.domain.Show;
 import org.showtime.repository.ShowRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ShowService {
 
     private final ShowRepository showRepository;
-
-    @Autowired
-    public ShowService(ShowRepository showRepository) {
-        this.showRepository = showRepository;
-    }
 
     public Show saveShow(Show show) {
         return showRepository.save(show);

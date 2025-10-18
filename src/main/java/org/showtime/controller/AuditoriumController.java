@@ -1,8 +1,8 @@
 package org.showtime.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.showtime.domain.Auditorium;
 import org.showtime.service.AuditoriumService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,14 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/auditoriums")
+@RequiredArgsConstructor
 public class AuditoriumController {
 
     private final AuditoriumService auditoriumService;
-
-    @Autowired
-    public AuditoriumController(AuditoriumService auditoriumService) {
-        this.auditoriumService = auditoriumService;
-    }
 
     @PostMapping
     public Auditorium createAuditorium(@RequestBody Auditorium auditorium) {
