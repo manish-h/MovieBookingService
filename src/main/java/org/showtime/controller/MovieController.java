@@ -33,4 +33,10 @@ public class MovieController {
         logger.info("Fetching all movies");
         return movieService.getAllMovies();
     }
+
+    @GetMapping("/search")
+    public List<Movie> searchMovies(@RequestParam("keyword") String keyword) {
+        logger.info("Searching for movies with keyword: {}", keyword);
+        return movieService.searchMoviesByTitle(keyword);
+    }
 }

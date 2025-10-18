@@ -24,4 +24,8 @@ public class MovieService {
     public List<Movie> getAllMovies() {
         return movieRepository.findAll();
     }
+
+    public List<Movie> searchMoviesByTitle(String keyword) {
+        return movieRepository.searchByTitleContainingIgnoreCase(keyword);
+    }
 }
