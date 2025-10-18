@@ -1,0 +1,61 @@
+package org.showtime.controller;
+
+import org.showtime.domain.Show;
+import org.showtime.service.ShowService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/shows")
+public class ShowController {
+
+    private final ShowService showService;
+
+    @Autowired
+    public ShowController(ShowService showService) {
+        this.showService = showService;
+    }
+
+    @PostMapping
+    public Show createShow(@RequestBody Show show) {
+        return showService.saveShow(show);
+    }
+
+    @GetMapping
+    public List<Show> getAllShows() {
+        return showService.getAllShows();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Show> getShowById(@PathVariable Long id) {
+        return showService.getShowById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Show> updateShow(@PathVariable Long id, @RequestBody Show showDetails) {
+        return showService.getShowById(id)
+                .map(existingShow -> {
+                    existingShow.setShowTime(showDetails.getShowTime());
+                    existingShow.setMovie(showDetails.getMovie());
+                    existingShow.setAuditorium(showDetails.getAuditorium());
+                    existingShow.setSeats(showDetails.getSeats());
+                    return ResponseEntity.ok(showService.saveShow(existingShow));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteShow(@PathVariable Long id) {
+        if (showService.getShowById(id).isPresent()) {
+            showService.deleteShow(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+}
