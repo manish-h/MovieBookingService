@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import org.showtime.converter.SeatListConverter;
 import java.time.LocalDateTime;
@@ -15,6 +17,9 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"auditorium_id", "showTime"})
+})
 public class Show {
 
     @Id
