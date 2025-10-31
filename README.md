@@ -114,7 +114,12 @@ The server will start on the default port 8080.
     ```bash
     curl -X DELETE http://localhost:8080/auditoriums/1
     ```
+*   **Create a new booking:**
 
+    ```sh
+    curl -X POST -H "Content-Type: application/json" -d '{"showId": 1, "seatNumbers": ["A1", "A2"], "customerName": "John Doe"}' http://localhost:8080/bookings
+    ```
+    
 ## Database
 
 To connect to the PostgreSQL database, use the following command:
