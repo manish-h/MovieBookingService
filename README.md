@@ -6,6 +6,7 @@ This is a Spring Boot application for a movie booking service.
 
 * Java 21
 * Gradle
+* PostgreSQL
 
 ## Setup
 
@@ -112,4 +113,44 @@ The server will start on the default port 8080.
 
     ```bash
     curl -X DELETE http://localhost:8080/auditoriums/1
+    ```
+
+## Database
+
+To connect to the PostgreSQL database, use the following command:
+
+```bash
+psql -h localhost -U postgres -W
+```
+
+Once connected, you can switch to the `showtime` database:
+
+```sql
+\c showtime
+```
+
+### Sample Queries
+
+*   **Get all movies:**
+
+    ```sql
+    SELECT * FROM movie;
+    ```
+
+*   **Get all auditoriums:**
+
+    ```sql
+    SELECT * FROM auditorium;
+    ```
+
+*   **Get all shows:**
+
+    ```sql
+    SELECT * FROM show;
+    ```
+
+*   **Insert a new movie:**
+
+    ```sql
+    INSERT INTO movie (title) VALUES ('Inception');
     ```
