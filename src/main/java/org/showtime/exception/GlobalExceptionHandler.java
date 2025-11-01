@@ -12,9 +12,18 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
-        log.info("DataIntegrityViolationException occurred:", ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    @ExceptionHandler(BookingServiceBaseException.class)
+    public ResponseEntity<Object> handleBookingServiceBaseException(BookingServiceBaseException ex, WebRequest request) {
+        var status = switch (ex) {
+            case InvalidInputException e -> HttpStatus.BAD_REQUEST;
+            case RetryableException e -> HttpStatus.SERVICE_UNAVAILABLE;
+            default -> HttpStatus.INTERNAL_SERVER_ERROR;
+        };
+        if (status.is4xxClientError()) {
+            log.info("Client error occurred:", ex);
+        } else {
+            log.info("Server error occurred:", ex);
+        }
+        return new ResponseEntity<>(ex.getMessage(), status);
     }
 }

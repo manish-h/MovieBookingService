@@ -1,11 +1,11 @@
 package org.showtime.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.showtime.domain.Booking;
 import org.showtime.domain.Seat;
 import org.showtime.domain.Show;
 import org.showtime.domain.Ticket;
+import org.showtime.exception.InvalidInputException;
 import org.showtime.repository.BookingRepository;
 import org.showtime.repository.ShowRepository;
 import org.showtime.repository.TicketRepository;
@@ -32,7 +32,7 @@ public class BookingService {
     public BookingResponse createBooking(BookingRequest request) {
         // Step 1: Find the show.
         Show show = showRepository.findById(request.showId())
-                .orElseThrow(() -> new EntityNotFoundException("Show not found with id: " + request.showId()));
+                .orElseThrow(() -> new InvalidInputException("Show not found with id: " + request.showId()));
 
         // Step 2: Validate that requested seats exist in the show's auditorium layout.
         Set<String> validSeatNumbers = show.getSeats().stream()
@@ -58,7 +58,7 @@ public class BookingService {
         } catch (DataIntegrityViolationException e) {
             // This is the crucial part. If the UNIQUE constraint on (show_id, seatNumber) is violated,
             // this exception is thrown, the transaction is rolled back, and we inform the user.
-            throw new IllegalStateException("One or more requested seats were booked by another user during this transaction.", e);
+            throw new InvalidInputException("One or more requested seats were booked by another user", e);
         }
 
         // Step 4: Return a response
