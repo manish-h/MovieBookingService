@@ -3,6 +3,7 @@ package org.showtime.controller;
 import lombok.RequiredArgsConstructor;
 import org.showtime.domain.Show;
 import org.showtime.service.ShowService;
+import org.showtime.service.response.ShowDetailsResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class ShowController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Show> getShowById(@PathVariable Long id) {
+    public ResponseEntity<ShowDetailsResponse> getShowById(@PathVariable Long id) {
         return showService.getShowById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -34,20 +35,14 @@ public class ShowController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Show> updateShow(@PathVariable Long id, @RequestBody Show showDetails) {
-        return showService.getShowById(id)
-                .map(existingShow -> {
-                    existingShow.setShowTime(showDetails.getShowTime());
-                    existingShow.setMovie(showDetails.getMovie());
-                    existingShow.setAuditorium(showDetails.getAuditorium());
-                    existingShow.setSeats(showDetails.getSeats());
-                    return ResponseEntity.ok(showService.saveShow(existingShow));
-                })
+        return showService.updateShow(id, showDetails)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteShow(@PathVariable Long id) {
-        if (showService.getShowById(id).isPresent()) {
+        if (showService.showExists(id)) {
             showService.deleteShow(id);
             return ResponseEntity.noContent().build();
         } else {
